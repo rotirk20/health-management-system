@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Users')
 @section('content')
+<a class="btn btn-primary mb-2" href="/users/create">Create user</a>
 <div class="table-responsive">
   <table class="table">
     <thead>
@@ -17,7 +18,7 @@
         <th>{{ $loop->index+1 }}</th>
         <td>{{ $user->name }} </td>
         <td>{{ $user->email }} </td>
-        <td><a class="btn btn-primary btn-sm">Edit</a>
+        <td><a class="btn btn-primary btn-sm" href="/users/{{$user->id}}/edit">Edit</a>
           <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
         </td>
       </tr>

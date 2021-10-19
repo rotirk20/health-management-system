@@ -14,11 +14,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'App\Http\Controllers\AppointmentController@search')->name('search');
 
+//Profile & Users Admin 
 Route::get('/profile', 'App\Http\Controllers\UserController@profile')->name('profile')->middleware('auth');
 Route::get('/profile/change-password', 'App\Http\Controllers\ChangePasswordController@index')->middleware('auth');
 Route::post('/profile/change-password', 'App\Http\Controllers\ChangePasswordController@store')->name('change.password')->middleware('auth');;
 Route::get('/users', 'App\Http\Controllers\UserController@index')->name('users')->middleware('auth');
-Route::get('user/{id}/delete', 'App\Http\Controllers\UserController@destroy')->middleware('auth');
+Route::get('/users/{id}/edit', 'App\Http\Controllers\UserController@edit')->middleware('auth');
+Route::get('/users/create', 'App\Http\Controllers\UserController@create')->middleware('auth');
+Route::post('/users/create', 'App\Http\Controllers\UserController@store')->middleware('auth');
+Route::get('/user/{id}/delete', 'App\Http\Controllers\UserController@destroy')->middleware('auth');
+Route::put('/users/update/{id}', 'App\Http\Controllers\UserController@update')->name('users.update')->middleware('auth');
+
+//Roles
+Route::get('/roles/create', 'App\Http\Controllers\RoleController@create')->name('roles.create')->middleware('auth');
+Route::post('/roles/create', 'App\Http\Controllers\RoleController@store')->name('roles.store')->middleware('auth');
+Route::get('/roles', 'App\Http\Controllers\RoleController@index')->name('roles')->middleware('role:Admin');
+Route::get('/roles/{id}', 'App\Http\Controllers\RoleController@show')->middleware('auth');
+Route::get('/roles/{id}/delete', 'App\Http\Controllers\RoleController@destroy')->name('roles.destroy')->middleware('auth');
 
 //Patients
 Route::get('/patients', 'App\Http\Controllers\PatientController@index')->name('patients')->middleware('auth');
@@ -46,6 +58,6 @@ Route::put('/appointment/update/{id}', 'App\Http\Controllers\AppointmentControll
 Route::get('/appointment/{id}/delete', 'App\Http\Controllers\AppointmentController@destroy')->middleware('auth');
 
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index',])->name('home');
+Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index',])->name('dashboard');

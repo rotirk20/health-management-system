@@ -3,22 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 
-class UserController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $users = User::all();
-        return view('admin.users.index', ['users' => $users]);
+        $roles = Role::orderBy('id', 'DESC')->paginate(5);
+
+        return view('admin.roles.index', compact('roles'));
     }
 
     /**
@@ -29,7 +28,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::get(['id', 'name']);
-        return view('admin.users.create', compact('roles'));
+        $permissions = Permission::all();
+        return view('admin.roles.create', ['roles' => $roles, 'permissions' => $permissions]);
     }
 
     /**
@@ -40,15 +40,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::create([
-            'name'      =>  $request->name,
-            'email'     =>  $request->email,
-            'password'  =>  Hash::make($request->password),
+        $this->validate($request, [
+            'name' => 'required|unique:roles,name',
+            'permissions' => 'required',
         ]);
 
-        $user->assignRole($request->input('roles'));
+        $role = Role::create(['name' => $request->input('name')]);
+        $role->syncPermissions($request->permissions);
 
-        return redirect()->route('users')->with('success', 'User created succssfully.');
+        return redirect()->route('roles')
+            ->with('success', 'Role created successfully');
     }
 
     /**
@@ -62,13 +63,6 @@ class UserController extends Controller
         //
     }
 
-
-    public function profile()
-    {
-        $user = Auth::user();
-        return view('auth.profile')->with(['user' => $user]);
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -77,11 +71,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
-        $roles = Role::get(['id', 'name']);
-        $userRoles = $user->roles->pluck('id')->toArray();
-
-        return view('admin.users.edit', compact('user', 'roles', 'userRoles'));
+        //
     }
 
     /**
@@ -91,13 +81,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $user = User::where('email', $request->email)->first();
-        $user->update(['name' => $request->name]);
-        $user->syncRoles($request->input('roles'));
-
-        return redirect()->route('users')->with('success', 'User updated succssfully.');
+        //
     }
 
     /**
@@ -108,9 +94,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
-        $user = User::find($id);
-        $user->delete();
-        return redirect('users');
+        Role::find($id)->delete();
+
+        return redirect()->route('roles')
+            ->with('success', 'Role deleted successfully');
     }
 }

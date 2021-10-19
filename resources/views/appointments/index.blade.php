@@ -1,14 +1,14 @@
 @extends('layouts.app')
 @section('content')
 @section('title', 'Appointments')
-<a class="btn btn-primary mb-0" href="{{ Route('appointment/create')}}">Add Appointment</a>
-<form>
+<a class="btn btn-primary mt-2" href="{{ Route('appointment/create')}}">Add Appointment</a>
+<form class="d-inline">
   <div class="d-flex flex-wrap m-2 w-50 float-right justify-content-end">
     <div class="input-group mb-3">
       <input class="form-control w-50" placeholder="Search by any column..." id="searchAppointment" name="search">
-      <select class="form-select w-25" aria-label="Default select example" name="searchType">
+      <select class="form-select w-25 p-1" aria-label="Default select example" name="searchType">
         <option selected>Name</option>
-        <option >Code</option>
+        <option>Code</option>
       </select>
     </div>
   </div>
@@ -25,6 +25,7 @@
         <th scope="col">Action</th>
       </tr>
     </thead>
+    @if ($appointments->count() > 0)
     <tbody>
       @foreach($appointments as $appointment)
       <tr>
@@ -49,6 +50,13 @@
       </tr>
       @endforeach
     </tbody>
+    @else
+    <tbody>
+      <tr>
+        <td colspan="6" class="text-center">No data</td>
+      </tr>
+    </tbody>
+    @endif
   </table>
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">

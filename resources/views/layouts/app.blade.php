@@ -79,13 +79,16 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('home') }}">
+                                <a class="dropdown-item" href="{{ route('dashboard') }}">
                                     Dashboard
                                 </a>
                                 <a class="dropdown-item" href="{{ route('profile') }}">
                                     Profile
                                 </a>
+                                @role('Admin')
+                                <a class="dropdown-item" href="{{ route('roles') }}">Roles</a>
                                 <a class="dropdown-item" href="{{ route('users') }}">Users</a>
+                                @endrole
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}

@@ -12,6 +12,7 @@
         <th scope="col">Action</th>
       </tr>
     </thead>
+    @if ($doctors->count() > 0)
     <tbody>
       @foreach($doctors as $doctor)
       <tr>
@@ -25,6 +26,13 @@
       </tr>
       @endforeach
     </tbody>
+    @else
+    <tbody>
+      <tr>
+        <td colspan="5" class="text-center">No data</td>
+      </tr>
+    </tbody>
+    @endif
   </table>
 </div>
 @endsection

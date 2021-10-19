@@ -13,6 +13,7 @@
         <th scope="col">Action</th>
       </tr>
     </thead>
+    @if($patients->count() > 0)
     <tbody>
       @foreach($patients as $pat)
       <tr>
@@ -26,6 +27,13 @@
       </tr>
       @endforeach
     </tbody>
+    @else
+    <tbody>
+      <tr>
+        <td colspan="5" class="text-center">No data</td>
+      </tr>
+    </tbody>
+    @endif
   </table>
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">

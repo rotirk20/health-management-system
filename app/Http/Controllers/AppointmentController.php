@@ -63,7 +63,7 @@ class AppointmentController extends Controller
         $times = $this->create_time_range('7:30', '18:30', '30 mins', '24');
         return view('appointments.create', ['patients' => $patients, 'doctors' => $doctors, 'times' => $times]);
     }
-    
+
 
     public function checkDate(Request $request)
 
