@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -31,7 +32,10 @@ class HomeController extends Controller
         $patients = Patient::all()->count();
         $doctors = Doctor::all()->count();
 
-        //dd($appointment);
+        $patientsMonthly = Patient::get()->groupBy(function($d) {
+            return Carbon::parse($d->created_at)->format('m');
+        });
+        //dd($patientsMonthly);
         return view('home', compact(['appointmentsToday', 'appointments', 'patients', 'doctors']));
     }
 }

@@ -1,10 +1,10 @@
-@extends('layouts.app')
-
+@extends('layouts.dashboard')
+@section('title', 'Profile')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow border-0">
+            <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary font-weight-bold border-bottom-0 text-white">{{ __('Profile') }}</div>
                 <div class="card-body">
                     Name: {{ $user->name }} <br>

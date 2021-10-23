@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- <title>{{ config('app.name', 'Managment') }}</title> -->
-    <title>Health Care - @yield('title')</title>
+    <title>{{ config('app.name') }} - @yield('title')</title>
 
     <!-- Scripts -->
 
@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" integrity="sha512-+EoPw+Fiwh6eSeRK7zwIKG2MA8i3rV/DGa3tdttQGgWyatG/SkncT53KHQaS5Jh9MNOT3dmFL0FjTY08And/Cw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
@@ -35,7 +36,7 @@
                     {{ config('app.name', 'Laravel') }}
                 </a> -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Health managment
+                    {{$settings->web_title}}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -43,7 +44,10 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav main-menu mr-auto">
+                        <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
                         @if(Auth::user())
                         <li class="nav-item {{ Request::is('patients') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('patients') }}">Patients</a>
@@ -63,31 +67,24 @@
                         @guest
                         @if (Route::has('login'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                        </li>
-                        @endif
-
-                        @if (Route::has('register'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            <a class="nav-link btn btn-primary text-white" href="{{ route('login') }}">{{ __('Login') }} <i class="bi bi-box-arrow-in-right fa-lg"></i></a>
                         </li>
                         @endif
                         @else
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown bg-light">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            <i class="bi bi-person-circle fa-lg"></i>  {{ Auth::user()->name }}
+                                <i class="bi bi-person-circle fa-lg"></i> {{ Auth::user()->name }}
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                <a class="dropdown-item {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                                     Dashboard
                                 </a>
-                                <a class="dropdown-item" href="{{ route('profile') }}">
+                                <a class="dropdown-item {{ Request::is('profile') ? 'active' : '' }}" href="{{ route('profile') }}">
                                     Profile
                                 </a>
                                 @role('Admin')
-                                <a class="dropdown-item" href="{{ route('roles') }}">Roles</a>
-                                <a class="dropdown-item" href="{{ route('users') }}">Users</a>
+                                <a class="dropdown-item {{ Request::is('users') ? 'active' : '' }}" href="/settings">Settings</a>
                                 @endrole
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -107,7 +104,7 @@
 
         @yield('home-cover')
 
-        <main class="py-4 container">
+        <main class="py-4 container bg-white shadow-sm mt-4">
             @include('flash-message')
             @yield('content')
         </main>
@@ -118,15 +115,11 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js" defer></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap5.min.js" defer></script>
-    <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js" defer></script>
-    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js" integrity="sha512-LGXaggshOkD/at6PFNcp2V2unf9LzFq6LE+sChH7ceMTDP0g2kn6Vxwgg7wkPP7AAtX+lmPqPdxB47A0Nz0cMQ==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/fontawesome.min.js" integrity="sha512-pafh0hrrT9ZPZl/jx0cwyp7N2+ozgQf+YK94jSupHHLD2lcEYTLxEju4mW/2sbn4qFEfxJGZyIX/yJiQvgglpw==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/solid.min.js" integrity="sha512-tmaD3q45JFEAXSixAxEo5p9K8ocD26I5zy42OQ5p7ZwnIx/JaGicXVHNawlZiZTHAU7jBNTl5XyZ8IcGwPG7gQ==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.js" integrity="sha512-1+GNKHQ9yw2vSBLvpsquZDJh0ktonnPGPkYBNd7Xh85jnvibX7MQaVLQEeTQBhcSSFLYu6DAefDsn/KFQo/YNQ==" crossorigin="anonymous" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js" integrity="sha512-C1zvdb9R55RAkl6xCLTPt+Wmcz6s+ccOvcr6G57lbm8M2fbgn2SUjUJbQ13fEyjuLViwe97uJvwa1EUf4F1Akw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>    
     <script type="text/javascript">
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip({

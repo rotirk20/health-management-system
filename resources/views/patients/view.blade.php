@@ -32,9 +32,8 @@
                 <th scope="col">Action</th>
             </thead>
             <tbody>
+                @if($app->count() > 0)
                 @foreach ($app as $appoint)
-                @if($appoint->count())
-                @if (!empty($doctor->doctors))
                 <tr>
                     <th>{{ $loop->index+1 }}</th>
                     <td>
@@ -49,13 +48,12 @@
                         <a class="btn btn-primary btn-sm" href="/appointment/view/{{ $appoint->id}}"><i class="bi bi-arrow-right"></i></a>
                     </td>
                 </tr>
+                @endforeach
                 @else
                 <tr>
-                    <td>No appointments.</td>
+                    <td colspan="4" class="text-center">No appointments.</td>
                 </tr>
                 @endif
-                @endif
-                @endforeach
             </tbody>
         </table>
     </div>

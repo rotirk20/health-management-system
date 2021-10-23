@@ -9,7 +9,10 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Doctor;
+use App\Models\File;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Input\Input;
 
 class AppointmentController extends Controller
 {
@@ -22,6 +25,11 @@ class AppointmentController extends Controller
     {
         $perPage = $request->input('perPage', 5);
         $appointments = Appointment::with(['doctors', 'patients'])->orderBy('appointment', 'asc')->paginate($perPage);
+        $role = 'John Jonhson';
+        $query = Appointment::with(['doctors' => function ($q) use ($role) {
+            $q->where('name', '=', $role);
+        }])->get();
+
         if ($appointments === null) {
             return view('appointments.index');
         } else {
@@ -60,7 +68,9 @@ class AppointmentController extends Controller
     {
         $patients = Patient::pluck('name', 'id')->toArray();
         $doctors = Doctor::pluck('name', 'id')->toArray();
-        $times = $this->create_time_range('7:30', '18:30', '30 mins', '24');
+        $settings = DB::table('settings')->first();
+        $times = $this->create_time_range($settings->start_time, $settings->end_time, $settings->interval, $settings->format);
+        //$times = array_diff($times, ["10:30"]);
         return view('appointments.create', ['patients' => $patients, 'doctors' => $doctors, 'times' => $times]);
     }
 
@@ -119,6 +129,7 @@ class AppointmentController extends Controller
         $appointment->appointment = $request->input('time');
         $appointment->patient_id = $request->input('patient_id');
         $appointment->doctor_id = $request->input('doctor_id');
+        $appointment->description = $request->input('description');
         $appointment->code = $this->generateUniqueCode();
         $code = $appointment->code;
         $appointment->save();
@@ -136,7 +147,7 @@ class AppointmentController extends Controller
      */
     public function show($id)
     {
-        $appointment = Appointment::find($id);
+        $appointment = Appointment::with('files')->find($id);
         $patient = Patient::with('appointments')->where('id', '=', $appointment->patient_id)->first();
         $doctor = Doctor::with('appointments')->where('id', '=', $appointment->doctor_id)->first();
         return view('appointments.view', ['appointment' => $appointment, 'patient' => $patient, 'doctor' => $doctor]);
@@ -153,12 +164,17 @@ class AppointmentController extends Controller
         $appointment = Appointment::where('id', '=', $id)->first();
         $date = strtotime($appointment->getAttributes()['appointment']);
         $formatDate = date('Y-m-d', $date);
+        $files = Appointment::with('files')->where('id', '=', $id)->get();
+        $fileArray = [];
+        foreach ($files as $file) {
+            array_push($fileArray, $file->files);
+        }
         $time = date('H:i', $date);
         $time = ltrim($time, '0');
         $times = $this->create_time_range('7:30', '18:30', '30 mins', '24');
         $patients = Patient::pluck('name', 'id')->toArray();
         $doctors = Doctor::pluck('name', 'id')->toArray();
-        return view('appointments.edit', ['patients' => $patients, 'doctors' => $doctors, 'appointment' => $appointment, 'date' => $formatDate, 'timeHours' => $time, 'times' => $times]);
+        return view('appointments.edit', ['patients' => $patients, 'doctors' => $doctors, 'files' => $fileArray, 'appointment' => $appointment, 'date' => $formatDate, 'timeHours' => $time, 'times' => $times]);
     }
 
     /**
@@ -174,8 +190,27 @@ class AppointmentController extends Controller
         $appointment->appointment = $request->input('time');
         $appointment->patient_id = $request->input('patient_id');
         $appointment->doctor_id = $request->input('doctor_id');
+        $appointment->description = $request->input('description');
         $appointment->save();
+
+        //dd($request->file('files'));
+        if ($request->file('files') != null) {
+            foreach ($request->file('files') as $image) {
+                $appointmentFile = new File();
+                $new_name = rand() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('storage/images/'), $new_name);
+                $appointmentFile->name = $new_name;
+                $appointmentFile->appointment_id = $appointment->id;
+                $appointmentFile->file_path = public_path('storage/images/'). '' . $new_name;
+                $appointmentFile->save();
+            }
+        }
+
         return redirect('/appointments');
+    }
+
+    public function destroyImage(Request $request) {
+
     }
 
     /**
@@ -194,15 +229,12 @@ class AppointmentController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('code');
-        //dd($search);
         $appointments = Appointment::query('code')->where('code', '=', $search)->first();
-        //dd($appointments);
         if ($appointments != null) {
             $patient = Patient::find($appointments->patient_id);
             $doctor = Doctor::find($appointments->doctor_id);
             return view('welcome', ['appointments' => $appointments, 'patient' => $patient, 'doctor' => $doctor, 'search' => $search]);
         }
-        //dd($patient);
         return view('welcome', ['appointments' => $appointments, 'search' => $search]);
     }
 }

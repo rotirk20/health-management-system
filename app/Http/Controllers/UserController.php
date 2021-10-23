@@ -17,7 +17,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::all();
+        $users = User::with('roles')->get();
+        //dd($users);
         return view('admin.users.index', ['users' => $users]);
     }
 
@@ -48,7 +49,7 @@ class UserController extends Controller
 
         $user->assignRole($request->input('roles'));
 
-        return redirect()->route('users')->with('success', 'User created succssfully.');
+        return redirect()->route('users')->with('success', 'User created successfully.');
     }
 
     /**

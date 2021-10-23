@@ -1,7 +1,9 @@
 @extends('layouts.app')
-
+@section('title', 'Create patient')
 @section('content')
 <a class="btn btn-primary mb-3" href="{{route('patients')}}"><i class="bi bi-arrow-left"></i> Back</a>
+<h4>Create patient</h4>
+<hr>
 {{ Form::open(array('route' => 'patient/create', 'class' => 'row g-3')) }}
 <?php echo Form::token(); ?>
 <div class="col-md-6">
@@ -13,8 +15,8 @@
     {{Form::email('email',null, array('class' => 'form-control', 'placeholder' => 'example@email.com'))}}
 </div>
 <div class="col-md-2">
-    <?php echo Form::label('age', 'Age'); ?>
-    {{Form::number('age',null, array('class' => 'form-control', 'placeholder' => 'Age'))}}
+    <?php echo Form::label('birthdate', 'Birthdate'); ?>
+    {{Form::date('birthdate',null, array('class' => 'form-control', 'placeholder' => 'Birthdate' ))}}
 </div>
 <div class="col-md-6">
     <?php echo Form::label('city', 'City'); ?>

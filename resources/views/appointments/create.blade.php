@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Create appointment')
 @section('content')
 <a class="btn btn-primary mb-3" href="{{route('appointments')}}">Back</a>
 <h4>Create appointment</h4>
@@ -7,6 +8,11 @@
 <?php echo Form::token(); ?>
 <div class="col-md-6">
     <div style="overflow:hidden;">
+        <div id="loader">
+            <div class="spinner-grow spinner-grow-sm m-auto" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <input name="appointment" type="text" id="datetimepicker12" hidden>
         <input name="time" type="text" id="time" hidden>
         <div class="time">
@@ -21,6 +27,8 @@
     {!! Form::select('patient_id', $patients, null, ['class' => 'form-control selectpicker', 'data-live-search' => 'true', 'placeholder' => 'Please select patient']) !!}
     {{ Form::label('doctor_id', 'Doctor') }}
     {!! Form::select('doctor_id', $doctors, null, ['class' => 'form-control selectpicker', 'data-live-search' => 'true', 'placeholder' => 'Please select doctor']) !!}
+    <label>Description</label>
+    <textarea class="form-control" id="description" name="description" rows="5"></textarea>
 </div>
 <div class="col-12">
     {{Form::submit('Add Appointment', array('class' => 'btn btn-success'))}}
@@ -56,6 +64,12 @@
             data: {
                 data: date
             },
+            beforeSend: function() {
+                $('#loader').show();
+            },
+            complete: function() {
+                $('#loader').hide();
+            },
             success: function(result) {
                 $('.reserved').removeClass('reserved');
                 for (let i = 0; i < result.length; i++) {
@@ -82,6 +96,12 @@
                 dataType: "json",
                 data: {
                     data: date
+                },
+                beforeSend: function() {
+                    $('#loader').show();
+                },
+                complete: function() {
+                    $('#loader').hide();
                 },
                 success: function(result) {
                     $('.reserved').removeClass('reserved');

@@ -55,7 +55,7 @@ class PatientController extends Controller
             'name' => 'required',
             'address' => 'required',
             'city' => 'required',
-            'age' => 'required'
+            'birthdate' => 'required'
         ]);
 
         $patient = new Patient();
@@ -65,9 +65,9 @@ class PatientController extends Controller
         $patient->email = $request->input('email');
         $patient->address = $request->input('address');
         $patient->phone = $request->input('phone');
-        $patient->age = $request->input('age');
+        $patient->birthdate = $request->input('birthdate');
         $patient->save();
-        return redirect('patients');
+        return redirect('patients')->with('success', 'Patient created successfully.');
     }
 
     public function edit($id)

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Doctors')
 @section('content')
 <a class="btn btn-primary mb-2" href="{{ Route('doctor/create')}}">Add Doctor</a>
 <div class="table-responsive">

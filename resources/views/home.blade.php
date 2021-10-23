@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 @section('title', 'Dashboard')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <h4>{{ __('Dashboard') }}</h4>
-
+        <h4 class="card-header bg-primary font-weight-bold border-bottom-0 text-white mb-3">{{ __('Dashboard') }}</h4>
+        {{  now() }}
         <div class="col-md-12">
             @if (session('status'))
             <div class="alert alert-success" role="alert">

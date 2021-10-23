@@ -1,7 +1,9 @@
 @extends('layouts.app')
-
+@section('title', 'Create doctor')
 @section('content')
 <a class="btn btn-primary mb-3" href="{{route('doctors')}}">Back</a>
+<h4>Create doctor</h4>
+<hr>
 {{ Form::open(array('route' => 'doctor/create', 'class' => 'row g-3')) }}
 <?php echo Form::token(); ?>
 <div class="col-md-6">

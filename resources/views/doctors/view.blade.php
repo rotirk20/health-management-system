@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', $doctor->name)
 @section('content')
 <a class="btn btn-primary mb-3" href="{{route('doctor')}}"><i class="bi bi-arrow-left"></i> Back</a>
 

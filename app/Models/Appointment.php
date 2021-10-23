@@ -27,4 +27,9 @@ class Appointment extends Model
     {
         return $this->belongsToMany(Doctor::class, 'appointments', 'id', 'doctor_id');
     }
+
+    public function files()
+    {
+    	return $this->hasMany(File::class);
+    }
 }

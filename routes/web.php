@@ -17,20 +17,30 @@ Route::get('/', 'App\Http\Controllers\AppointmentController@search')->name('sear
 //Profile & Users Admin 
 Route::get('/profile', 'App\Http\Controllers\UserController@profile')->name('profile')->middleware('auth');
 Route::get('/profile/change-password', 'App\Http\Controllers\ChangePasswordController@index')->middleware('auth');
-Route::post('/profile/change-password', 'App\Http\Controllers\ChangePasswordController@store')->name('change.password')->middleware('auth');;
-Route::get('/users', 'App\Http\Controllers\UserController@index')->name('users')->middleware('auth');
-Route::get('/users/{id}/edit', 'App\Http\Controllers\UserController@edit')->middleware('auth');
-Route::get('/users/create', 'App\Http\Controllers\UserController@create')->middleware('auth');
-Route::post('/users/create', 'App\Http\Controllers\UserController@store')->middleware('auth');
-Route::get('/user/{id}/delete', 'App\Http\Controllers\UserController@destroy')->middleware('auth');
-Route::put('/users/update/{id}', 'App\Http\Controllers\UserController@update')->name('users.update')->middleware('auth');
+Route::post('/profile/change-password', 'App\Http\Controllers\ChangePasswordController@store')->name('change.password')->middleware('auth');
 
-//Roles
-Route::get('/roles/create', 'App\Http\Controllers\RoleController@create')->name('roles.create')->middleware('auth');
-Route::post('/roles/create', 'App\Http\Controllers\RoleController@store')->name('roles.store')->middleware('auth');
-Route::get('/roles', 'App\Http\Controllers\RoleController@index')->name('roles')->middleware('role:Admin');
-Route::get('/roles/{id}', 'App\Http\Controllers\RoleController@show')->middleware('auth');
-Route::get('/roles/{id}/delete', 'App\Http\Controllers\RoleController@destroy')->name('roles.destroy')->middleware('auth');
+Route::group(['prefix' => 'settings', 'middleware' => 'role:Admin'], function () {
+    Route::get('/users', 'App\Http\Controllers\UserController@index')->name('users');
+    Route::get('/users/{id}/edit', 'App\Http\Controllers\UserController@edit');
+    Route::get('/users/create', 'App\Http\Controllers\UserController@create');
+    Route::post('/users/create', 'App\Http\Controllers\UserController@store');
+    Route::get('/user/{id}/delete', 'App\Http\Controllers\UserController@destroy');
+    Route::put('/users/update/{id}', 'App\Http\Controllers\UserController@update')->name('users.update');
+
+    //Roles
+    Route::get('/roles/create', 'App\Http\Controllers\RoleController@create')->name('roles.create');
+    Route::post('/roles/create', 'App\Http\Controllers\RoleController@store')->name('roles.store');
+    Route::get('/roles', 'App\Http\Controllers\RoleController@index')->name('roles');
+    Route::get('/roles/{id}', 'App\Http\Controllers\RoleController@show')->name('roles.show');
+    Route::get('/roles/{id}/edit', 'App\Http\Controllers\RoleController@edit')->name('roles.edit');
+    Route::put('/roles/update/{id}', 'App\Http\Controllers\RoleController@update')->name('roles.update');
+    Route::get('/roles/{id}/delete', 'App\Http\Controllers\RoleController@destroy')->name('roles.destroy');
+});
+
+//Settings
+
+Route::get('/settings', 'App\Http\Controllers\SettingsController@index')->name('settings')->middleware(['role:Admin']);
+Route::post('/settings', 'App\Http\Controllers\SettingsController@saveSettings')->name('settings.save')->middleware(['role:Admin']);
 
 //Patients
 Route::get('/patients', 'App\Http\Controllers\PatientController@index')->name('patients')->middleware('auth');
@@ -45,6 +55,7 @@ Route::get('/patient/{id}/delete', 'App\Http\Controllers\PatientController@destr
 Route::get('/doctors', 'App\Http\Controllers\DoctorController@index')->name('doctors')->middleware('auth');
 Route::get('/doctor/create', 'App\Http\Controllers\DoctorController@create')->name('doctor/create')->middleware('auth');
 Route::post('/doctor/create', 'App\Http\Controllers\DoctorController@store')->middleware('auth');
+Route::post('/doctor/view/{id}', 'App\Http\Controllers\DoctorController@show')->middleware('auth');
 
 //Appointments
 Route::get('/appointments', 'App\Http\Controllers\AppointmentController@index')->name('appointments')->middleware('auth');
@@ -58,6 +69,6 @@ Route::put('/appointment/update/{id}', 'App\Http\Controllers\AppointmentControll
 Route::get('/appointment/{id}/delete', 'App\Http\Controllers\AppointmentController@destroy')->middleware('auth');
 
 
-Auth::routes(['register' => false]);
+Auth::routes();
 
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index',])->name('dashboard');

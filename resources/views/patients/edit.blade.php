@@ -1,7 +1,9 @@
 @extends('layouts.app')
-
+@section('title', $patient->name)
 @section('content')
 <a class="btn btn-primary mb-3" href="{{route('patients')}}"><i class="bi bi-arrow-left"></i> Back</a>
+<h4>Edit patient - {{$patient->name}}</h4>
+<hr>
 {!! Form::model($patient, [
 'method' => 'PUT',
 'url' => ['patient/update', $patient->id],
@@ -17,8 +19,8 @@
     {{Form::email('email',null, array('class' => 'form-control', 'placeholder' => 'example@email.com'))}}
 </div>
 <div class="col-md-2">
-    <?php echo Form::label('age', 'Age'); ?>
-    {{Form::number('age',null, array('class' => 'form-control', 'placeholder' => 'Age'))}}
+    <?php echo Form::label('birthdate', 'Birthdate'); ?>
+    {{Form::date('birthdate',null, array('class' => 'form-control', 'placeholder' => 'Birthdate'))}}
 </div>
 <div class="col-md-6">
     <?php echo Form::label('city', 'City'); ?>
