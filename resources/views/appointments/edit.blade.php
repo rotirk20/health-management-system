@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', $appointment->appointment)
 @section('content')
-<a class="btn btn-primary mb-3" href="{{route('appointments')}}"><i class="bi bi-arrow-left"></i> Back</a>
+<a class="btn btn-primary mb-3" href="{{url()->previous()}}"><i class="bi bi-arrow-left"></i> Back</a>
 <h4>Edit appointment</h4>
 <hr>
 {!! Form::model($appointment, [
@@ -17,7 +17,7 @@
     <div style="overflow:hidden;" class="shadow bg-white rounded p-3">
         {{ \Carbon\Carbon::parse($date)->format('d.m.Y') }} at {{$timeHours}}
         <div id="loader">
-            <div class="spinner-grow spinner-grow-sm m-auto" role="status">
+            <div class="spinner-grow spinner-grow-sm m-auto" style="width: 3rem; height: 3rem;" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
@@ -44,7 +44,6 @@
     <label>Documents</label>
     <div class="documents gallery d-flex flex-wrap">
         @foreach ($files as $file)
-        {{$file}}
         @foreach ($file as $image)
         <a href="{{ asset('storage/images/'.$image->name) }}" class="flex-1">
             <img src="{{ asset('storage/images/'.$image->name) }}" class="img-fluid">
@@ -88,6 +87,7 @@
             minuteStep: 5,
             formatViewType: 'time',
             format: 'L',
+            daysOfWeekDisabled: [0, 6]
         });
         $(".time span").filter(function() {
             return $(this).text() == '<?php echo $timeHours ?>';

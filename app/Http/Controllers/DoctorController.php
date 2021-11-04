@@ -25,7 +25,7 @@ class DoctorController extends Controller
             'name' => 'required',
             'city' => 'required',
             'email' => 'required',
-            'password' => 'required',
+            'address' => 'required',
             'age' => 'required'
         ]);
     
@@ -36,8 +36,8 @@ class DoctorController extends Controller
         $doctor->email = $request->input('email');
         $doctor->phone = $request->input('phone');
         $doctor->title = '';
-        $doctor->password = $request->input('password');
+        $doctor->address = $request->input('address');
         $doctor->save();
-        return redirect('doctors');
+        return redirect('doctors')->with('success', 'Doctor created successfully.');
     }
 }

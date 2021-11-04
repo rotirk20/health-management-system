@@ -20,6 +20,6 @@ class Patient extends Model
     ];
 
     public function appointments() {
-        return $this->belongsToMany(Patient::class, 'appointments')->withPivot('appointment');
+        return $this->belongsToMany(Patient::class, 'appointments')->withPivot('appointment', 'id');
     }
 }

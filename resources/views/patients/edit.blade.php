@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', $patient->name)
 @section('content')
-<a class="btn btn-primary mb-3" href="{{route('patients')}}"><i class="bi bi-arrow-left"></i> Back</a>
+<a class="btn btn-primary mb-3" href="{{url()->previous()}}"><i class="bi bi-arrow-left"></i> Back</a>
 <h4>Edit patient - {{$patient->name}}</h4>
 <hr>
 {!! Form::model($patient, [

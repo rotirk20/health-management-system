@@ -18,8 +18,12 @@ class CreateSettingsTable extends Migration
             $table->string('web_title');
             $table->string('start_time');
             $table->string('end_time');
+            $table->string('pause_time');
             $table->string('interval');
             $table->string('format');
+            $table->string('primary_color');
+            $table->string('secondary_color');
+            $table->string('logo_path');
             $table->timestamps();
         });
     }

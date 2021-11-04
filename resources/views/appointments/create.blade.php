@@ -9,7 +9,7 @@
 <div class="col-md-6">
     <div style="overflow:hidden;">
         <div id="loader">
-            <div class="spinner-grow spinner-grow-sm m-auto" role="status">
+            <div class="spinner-grow spinner-grow-sm m-auto" style="width: 3rem; height: 3rem;" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
@@ -39,8 +39,6 @@
 @section('additional_scripts')
 <script>
     $(function() {
-        var yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
         $('#datetimepicker12').datetimepicker({
             inline: true,
             sideBySide: true,
@@ -48,6 +46,7 @@
             formatViewType: 'time',
             format: 'L',
             minDate: new Date(),
+            daysOfWeekDisabled: [0, 6]
         });
         var selectedTime;
         var fullDate;

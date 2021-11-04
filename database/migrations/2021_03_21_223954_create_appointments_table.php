@@ -24,6 +24,7 @@ class CreateAppointmentsTable extends Migration
                 ->on('doctors')
                 ->onDelete('cascade');
             $table->unsignedBigInteger('patient_id');
+            $table->boolean('is_verify')->default(0);
             $table->foreign('patient_id')
                 ->references('id')
                 ->on('patients')

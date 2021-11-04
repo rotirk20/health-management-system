@@ -23,8 +23,8 @@
     {{Form::text('city',null, array('class' => 'form-control', 'placeholder' => 'City'))}}
 </div>
 <div class="col-md-6">
-    <?php echo Form::label('password', 'Address'); ?>
-    {{Form::password('password', array('class' => 'form-control', 'placeholder' => 'Password'))}}
+    <?php echo Form::label('address', 'Address'); ?>
+    {{Form::text('address',null, array('class' => 'form-control', 'placeholder' => 'Address'))}}
 </div>
 <div class="col-md-6">
     <?php echo Form::label('phone', 'Phone'); ?>

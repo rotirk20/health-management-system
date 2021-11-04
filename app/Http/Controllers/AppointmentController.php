@@ -12,7 +12,6 @@ use App\Models\Doctor;
 use App\Models\File;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Console\Input\Input;
 
 class AppointmentController extends Controller
 {
@@ -70,7 +69,7 @@ class AppointmentController extends Controller
         $doctors = Doctor::pluck('name', 'id')->toArray();
         $settings = DB::table('settings')->first();
         $times = $this->create_time_range($settings->start_time, $settings->end_time, $settings->interval, $settings->format);
-        //$times = array_diff($times, ["10:30"]);
+        $times = array_diff($times, [$settings->pause_time]);
         return view('appointments.create', ['patients' => $patients, 'doctors' => $doctors, 'times' => $times]);
     }
 
@@ -171,7 +170,9 @@ class AppointmentController extends Controller
         }
         $time = date('H:i', $date);
         $time = ltrim($time, '0');
-        $times = $this->create_time_range('7:30', '18:30', '30 mins', '24');
+        $settings = DB::table('settings')->first();
+        $times = $this->create_time_range($settings->start_time, $settings->end_time, $settings->interval, $settings->format);
+        $times = array_diff($times, [$settings->pause_time]);
         $patients = Patient::pluck('name', 'id')->toArray();
         $doctors = Doctor::pluck('name', 'id')->toArray();
         return view('appointments.edit', ['patients' => $patients, 'doctors' => $doctors, 'files' => $fileArray, 'appointment' => $appointment, 'date' => $formatDate, 'timeHours' => $time, 'times' => $times]);

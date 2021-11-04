@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'App\Http\Controllers\AppointmentController@search')->name('search');
+Route::get('/', 'App\Http\Controllers\HomeController@search')->name('search');
+Route::post('/create-appointment', 'App\Http\Controllers\HomeController@store_appointment')->name('create.appointment');
 
 //Profile & Users Admin 
 Route::get('/profile', 'App\Http\Controllers\UserController@profile')->name('profile')->middleware('auth');
@@ -44,10 +45,10 @@ Route::post('/settings', 'App\Http\Controllers\SettingsController@saveSettings')
 
 //Patients
 Route::get('/patients', 'App\Http\Controllers\PatientController@index')->name('patients')->middleware('auth');
-Route::get('/patient/view/{id}', 'App\Http\Controllers\PatientController@show')->middleware('auth');
+Route::get('/patient/view/{id}', 'App\Http\Controllers\PatientController@show')->name('patient.view')->middleware('auth');
 Route::get('/patient/create', 'App\Http\Controllers\PatientController@create')->name('patient/create')->middleware('auth');
 Route::post('/patient/create', 'App\Http\Controllers\PatientController@store')->middleware('auth');
-Route::get('/patient/{id}/edit', 'App\Http\Controllers\PatientController@edit')->middleware('auth');
+Route::get('/patient/{id}/edit', 'App\Http\Controllers\PatientController@edit')->name('patient.edit')->middleware('auth');
 Route::put('/patient/update/{id}', 'App\Http\Controllers\PatientController@update')->middleware('auth');
 Route::get('/patient/{id}/delete', 'App\Http\Controllers\PatientController@destroy')->middleware('auth');
 
@@ -57,18 +58,22 @@ Route::get('/doctor/create', 'App\Http\Controllers\DoctorController@create')->na
 Route::post('/doctor/create', 'App\Http\Controllers\DoctorController@store')->middleware('auth');
 Route::post('/doctor/view/{id}', 'App\Http\Controllers\DoctorController@show')->middleware('auth');
 
+//Verify appointment
+Route::get('/appointments/verify/{code}', 'App\Http\Controllers\HomeController@verify');
+Route::post('/appointments/verify', 'App\Http\Controllers\HomeController@verifyAppointment');
+
 //Appointments
 Route::get('/appointments', 'App\Http\Controllers\AppointmentController@index')->name('appointments')->middleware('auth');
 Route::get('/appointment/create', 'App\Http\Controllers\AppointmentController@create')->name('appointment/create')->middleware('auth');
-Route::post('/date_check', 'App\Http\Controllers\AppointmentController@checkDate')->middleware('auth');
+Route::post('/date_check', 'App\Http\Controllers\AppointmentController@checkDate');
 Route::get('/appointments/search', 'App\Http\Controllers\AppointmentController@searchAppointment')->middleware('auth');
 Route::get('/appointment/view/{id}', 'App\Http\Controllers\AppointmentController@show')->middleware('auth');
 Route::post('/appointment/create', 'App\Http\Controllers\AppointmentController@store')->middleware('auth');
-Route::get('/appointment/{id}/edit', 'App\Http\Controllers\AppointmentController@edit')->middleware('auth');
+Route::get('/appointment/{id}/edit', 'App\Http\Controllers\AppointmentController@edit')->name('appointment.edit')->middleware('auth');
 Route::put('/appointment/update/{id}', 'App\Http\Controllers\AppointmentController@update')->middleware('auth');
 Route::get('/appointment/{id}/delete', 'App\Http\Controllers\AppointmentController@destroy')->middleware('auth');
 
-
 Auth::routes();
 
-Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index',])->name('dashboard');
+Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index')->name('dashboard');
+Route::post('/charts-data', 'App\Http\Controllers\DashboardController@data');

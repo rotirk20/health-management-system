@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('content')
 @section('title', 'Appointments')
+@section('content')
 <a class="btn btn-primary mt-2" href="{{ Route('appointment/create')}}">Add Appointment</a>
 <form class="d-inline">
   <div class="d-flex flex-wrap m-2 w-50 float-right justify-content-end">

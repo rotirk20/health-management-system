@@ -18,7 +18,7 @@
       @foreach($patients as $pat)
       <tr>
         <th>{{ $loop->index+1 }}</th>
-        <td><a href="patient/view/{{$pat->id}}">{{ $pat->name }}</a></td>
+        <td><a href="{{ route('patient.view', $pat->id) }}">{{ $pat->name }}</a></td>
         <td>{{ $pat->city }}, {{ $pat->address }} </td>
         <td>{{ $pat->phone }} </td>
         <td><a href="patient/{{$pat->id}}/edit" class="btn btn-primary btn-sm"><i class="bi bi-pencil"></i></a>

@@ -2,7 +2,7 @@
 
 @section('content')
 <a class="btn btn-primary mb-3" href="{{route('appointments')}}"><i class="bi bi-arrow-left"></i> Back</a>
-
+<a class="btn btn-success mb-3 float-right" href="{{route('appointment.edit', $appointment->id)}}"> Edit</a>
 <h4>Appointment details</h4>
 <hr>
 <div class="row g-3">

@@ -34,19 +34,15 @@ class PatientController extends Controller
     {
         $date = date('Y-m-d H:i');
         $patient = Patient::with('appointments')->where('id', '=', $id)->first();
-        //dd($patient);
         $appointments = $patient->appointments;
-        foreach ($appointments as $appointment) {
-            $app = Appointment::with('patients')->where('patient_id', '=', $id)->whereDate('appointment', '>', $date)->get();
-        }
-        //dd($app->getAttributes()['appointment']);
-        if ($app === null) {
-            $doctor = [];
-            return view('patients.view', ['patient' => $patient, 'app' => $app, 'doctor' => $doctor]);
+        if ($appointments->count() > 0) {
+            foreach ($appointments as $appointment) {
+                $app = Appointment::with('patients')->where('patient_id', '=', $id)->where('appointment', '>=', $date)->get();
+            }
         } else {
-            $doctor = Appointment::with('doctors')->where('doctor_id', '=', '1')->first();
-            return view('patients.view', ['patient' => $patient, 'app' => $app, 'doctor' => $doctor]);
+            $app = [];
         }
+        return view('patients.view', ['patient' => $patient, 'appointments' => $app]);
     }
 
     public function store(Request $request)
@@ -54,6 +50,7 @@ class PatientController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'address' => 'required',
+            'email' => 'required|email|unique:patients',
             'city' => 'required',
             'birthdate' => 'required'
         ]);
