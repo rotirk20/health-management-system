@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 @section('title', 'Settings')
 @section('content')
 <div class="d-flex flex-wrap flex-sm-row overflow-auto">

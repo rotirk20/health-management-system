@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 @section('title', 'Patients')
 @section('content')
 <a class="btn btn-primary mb-2" href="{{ Route('patient/create')}}">Add Patient</a>

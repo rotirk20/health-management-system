@@ -22,17 +22,17 @@ class AppointmentController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->input('perPage', 5);
+        $perPage = $request->input('perPage', 10);
         $appointments = Appointment::with(['doctors', 'patients'])->orderBy('appointment', 'asc')->paginate($perPage);
-        $role = 'John Jonhson';
-        $query = Appointment::with(['doctors' => function ($q) use ($role) {
-            $q->where('name', '=', $role);
-        }])->get();
-
+        $appointments->appends(['perPage' => $perPage]);
+        $patients = Patient::all();
+        if ($request->input('search')) {
+            $appointments = Appointment::with(['doctors', 'patients'])->where('patient_id', 'LIKE', '%'.$request->input('search').'%')->orderBy('appointment', 'asc')->paginate($perPage);
+        }
         if ($appointments === null) {
             return view('appointments.index');
         } else {
-            return view('appointments.index', ['appointments' => $appointments, 'perPage' => $perPage]);
+            return view('appointments.index', ['appointments' => $appointments, 'perPage' => $perPage, 'patients' => $patients]);
         }
     }
 
@@ -202,7 +202,7 @@ class AppointmentController extends Controller
                 $image->move(public_path('storage/images/'), $new_name);
                 $appointmentFile->name = $new_name;
                 $appointmentFile->appointment_id = $appointment->id;
-                $appointmentFile->file_path = public_path('storage/images/'). '' . $new_name;
+                $appointmentFile->file_path = public_path('storage/images/') . '' . $new_name;
                 $appointmentFile->save();
             }
         }
@@ -210,8 +210,8 @@ class AppointmentController extends Controller
         return redirect('/appointments');
     }
 
-    public function destroyImage(Request $request) {
-
+    public function destroyImage(Request $request)
+    {
     }
 
     /**

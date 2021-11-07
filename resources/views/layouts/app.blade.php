@@ -22,7 +22,11 @@
             $('[data-toggle="tooltip"]').tooltip({
                 placement: 'bottom'
             })
-            $('.selectpicker').selectpicker();
+            $('.selectpicker').selectpicker({
+                size: 3,
+                style: '',
+                styleBase: 'form-control shadow-none'
+            });
             setTimeout(function() {
                 $(".alert").fadeOut("slow");
             }, 3000);

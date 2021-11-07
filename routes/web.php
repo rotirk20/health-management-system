@@ -75,5 +75,5 @@ Route::get('/appointment/{id}/delete', 'App\Http\Controllers\AppointmentControll
 
 Auth::routes();
 
-Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index')->name('dashboard');
-Route::post('/charts-data', 'App\Http\Controllers\DashboardController@data');
+Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index')->name('dashboard')->middleware('auth');;
+Route::post('/charts-data', 'App\Http\Controllers\DashboardController@data')->middleware('auth');;

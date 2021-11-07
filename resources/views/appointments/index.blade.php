@@ -5,10 +5,15 @@
 <form class="d-inline">
   <div class="d-flex flex-wrap m-2 w-50 float-right justify-content-end">
     <div class="input-group mb-3">
-      <input class="form-control w-50" placeholder="Search by any column..." id="searchAppointment" name="search">
+      <select class="form-control w-50 selectpicker" data-live-search='true' placeholder="Search by any column..." id="searchAppointment" name="search" onClick="">
+        <option value="">Select Patient</option>
+        @foreach ($patients as $patient)
+        <option value="{{$patient->id}}">{{$patient->name}}</option>
+        @endforeach
+      </select>
       <select class="form-select w-25 p-1" aria-label="Default select example" name="searchType">
-        <option selected>Name</option>
-        <option>Code</option>
+        <option value="patient" selected>Patient</option>
+        <option value="code">Code</option>
       </select>
     </div>
   </div>
@@ -99,10 +104,12 @@
 @section('additional_scripts')
 <script>
   document.getElementById('perPage').onchange = function() {
-    window.location = "{!! $appointments->url(1) !!}&perPage=" + this.value;
+    window.location = "{!! url()->current() !!}?&perPage=" + this.value;
   };
   $(document).ready(function() {
-
+    $('#searchAppointment').change(function() {
+      this.form.submit();
+    })
   });
 </script>
 @endsection

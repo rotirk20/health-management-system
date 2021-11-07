@@ -3,7 +3,7 @@
 @section('home-cover')
 <div class="cover-image col-md-12 d-flex flex-wrap align-items-center container">
     <div class="search-appointment-section rounded col-md-3 offset-md-6 shadow my-5">
-        <h5>Enter your code to get appointment details</h5>
+        <h5>Get your appointment fast and easy</h5>
         <hr class="mt-1">
         <form id="searchForm" action="/create-appointment" method="POST">
             @csrf
